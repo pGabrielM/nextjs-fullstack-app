@@ -1,34 +1,54 @@
 import React from 'react'
 import styles from "./page.module.css";
 import Image from 'next/image';
+import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
+import { IPost } from '@/models/Post';
+import { notFound } from 'next/navigation'
 
-const BlogPost = () => {
+async function getData(id: IPost) {
+  const res = await fetch(`http://localhost:3002/api/posts/${id}`, {
+    cache: "no-store"
+  });
+
+  if (!res.ok) {
+    throw notFound();
+  }
+
+  return res.json();
+}
+
+export async function generateMetadata({params}: Params) {
+  const post: IPost = await getData(params.id)
+
+  return {
+    title: post.title,
+    description: post.desc
+  }
+}
+
+const BlogPost = async ({ params }: Params) => {
+  const data: IPost = await getData(params.id);
+  
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.info}>
-          <h1 className={styles.title}>
-            Lorem ipsum dolor sit amet consectetur, adipisicing
-          </h1>
-          <p className={styles.desc}>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Repellendus quia animi officiis laudantium ut excepturi,
-            esse temporibus magnam voluptate placeat reprehenderit dolorum
-          </p>
+          <h1 className={styles.title}>{data.title}</h1>
+          <p className={styles.desc}>{data.desc}</p>
           <div className={styles.author}>
             <Image
-              src={'https://images.pexels.com/photos/17959888/pexels-photo-17959888/free-photo-of-glacier-iceland-snow-wood.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}
+              src={data.img}
               alt=""
               width={40}
               height={40}
               className={styles.avatar}
             />
-            <span className={styles.username}>LetInfo</span>
+            <span className={styles.username}>{data.username}</span>
           </div>
         </div>
         <div className={styles.imageContainer}>
           <Image
-            src={'https://images.pexels.com/photos/17959888/pexels-photo-17959888/free-photo-of-glacier-iceland-snow-wood.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}
+            src={data.img}
             alt=""
             fill={true}
             className={styles.image}
@@ -36,38 +56,7 @@ const BlogPost = () => {
         </div>
       </div>
       <div className={styles.content}>
-        <p className={styles.text}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          nostrum. Illo.
-        </p>
-        <br />
-        <br />
-        <p className={styles.text}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam nulla
-          maxime quisquam distinctio neque commodi autem iure amet. Nulla, eos.
-          Reprehenderit quia eaque perspiciatis odio architecto laudantium ipsam
-          nostrum. Illo.
-        </p>
+        <p className={styles.text}>{data.content}</p>
       </div>
     </div>
   )

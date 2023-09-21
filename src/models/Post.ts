@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 const { Schema } = mongoose
 
-interface Post {
+export interface IPost {
+  _id: ObjectId
   title: string;
   desc: string;
   img: string;
@@ -10,7 +11,7 @@ interface Post {
   username: string
 }
 
-const postSchema = new Schema<Post>({
+const postSchema = new Schema<IPost>({
   title: {
     type: String,
     required: true,

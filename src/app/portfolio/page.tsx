@@ -1,6 +1,12 @@
 import React from 'react'
 import styles from './page.module.css'
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'LetInfo - Portfolio',
+  description: 'Portfolio page',
+}
 
 const Portfolio = () => {
   return (

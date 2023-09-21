@@ -2,6 +2,12 @@ import React from 'react'
 import styles from './page.module.css'
 import Image from 'next/image'
 import { Button } from '@/components/Button/Button'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'LetInfo - About',
+  description: 'About page',
+}
 
 const About = () => {
   return (
