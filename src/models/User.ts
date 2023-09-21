@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose
 
-interface User {
+export interface IUser {
   name: string;
   email: string;
   password: string
 }
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
   name: {
     type: String,
     unique: true,
