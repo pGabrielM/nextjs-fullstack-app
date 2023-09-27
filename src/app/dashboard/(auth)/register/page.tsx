@@ -5,17 +5,12 @@ import styles from "./page.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import bcrypt from "bcryptjs"
 
 type FormValues = {
   name: string;
   email: string;
   password: string;
 };
-
-
-
-
 
 const Register = () => {
   const [error, setError] = useState(false);

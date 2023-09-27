@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 const { Schema } = mongoose
 
-export interface IUser {
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string

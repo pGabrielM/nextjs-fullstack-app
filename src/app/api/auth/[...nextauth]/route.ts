@@ -5,13 +5,6 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import connect from "@/utils/db"
 import User from "@/models/User"
 
-export interface IUser {
-  name: string;
-  email: string;
-  password: string
-}
-
-
 const handler = NextAuth({
   // Configure one or more authentication providers
   providers: [
@@ -22,19 +15,32 @@ const handler = NextAuth({
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
+      credentials: {},
 
-      async authorize(credentials: IUser) {
+      async authorize(credentials, req) {
+        const { name, email, password } = credentials as {
+          name: string,
+          email: string,
+          password: string,
+        };
 
         await connect()
 
         try {
-          const user = User.findOne({ email: credentials.email })
+          const user: any = await User.findOne({ email: email })
 
-          if(user) {
-            const isPasswordCorret = await bcrypt.compare(credentials.password, user.password)
+          if (user) {
+            const isPasswordCorrect = await bcrypt.compare(
+              password,
+              user.password
+            )
 
-            
-          } else{
+            if (isPasswordCorrect) {
+              return user
+            } else {
+              throw new Error("Wrong Credentials!")
+            }
+          } else {
             throw new Error("User not found!")
           }
         } catch (error: any) {
@@ -43,6 +49,11 @@ const handler = NextAuth({
       }
     })
   ],
+  pages: {
+    error: "/dashboard/login",
+    signIn: "/dashboard",
+    signOut: "/"
+  },
 })
 
 export { handler as GET, handler as POST } 
