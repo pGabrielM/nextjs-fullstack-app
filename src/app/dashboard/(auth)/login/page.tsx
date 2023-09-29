@@ -15,14 +15,14 @@ type FormValues = {
 const Login = () => {
   const session = useSession()
   const router = useRouter()
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm();
 
 
-  if(session.status === "loading") {
+  if (session.status === "loading") {
     return <p>Loading...</p>
   }
 
-  if(session.status === "authenticated") {
+  if (session.status === "authenticated") {
     router.push("/dashboard")
   }
 
@@ -32,7 +32,7 @@ const Login = () => {
     const email = data.email
     const password = data.password
 
-      signIn("credentials", { email, password })
+    signIn("credentials", { email, password })
   }
 
   return (
@@ -56,8 +56,8 @@ const Login = () => {
             />
             <button className={styles.button} type='submit'>Login</button>
           </form>
-            <p>OR</p>
-            <button onClick={() => signIn("google")}>Login with Google</button>
+          <p>OR</p>
+          <button onClick={() => signIn("google")}>Login with Google</button>
         </div>
       </div>
     </div>

@@ -6,13 +6,21 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useSWR, { Fetcher } from "swr";
 import Image from "next/image";
-import { IPost } from "@/models/Post";
 import { SubmitHandler, useForm } from "react-hook-form";
+
+interface IPost {
+  _id: string
+  title: string;
+  desc: string;
+  img: string;
+  content: string
+  username: string
+}
 
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
-  const { register, handleSubmit } = useForm<IPost>();
+  const { register, handleSubmit } = useForm<IPost>()
 
   const fetcher: Fetcher<IPost[], string> = (...args) =>
     fetch(...args).then((res) => res.json());
@@ -30,11 +38,13 @@ const Dashboard = () => {
     router.push("/dashboard/login");
   }
 
-  const onSubmit: SubmitHandler<IPost> = async (data) => {
+  const onSubmit: SubmitHandler<IPost> = (data: IPost) => {
 
     const title = data.title
     const desc = data.desc
     const image = data.img
+
+    console.log(desc)
 
 
   }
@@ -53,28 +63,11 @@ const Dashboard = () => {
         ))}
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <input {...register("title", {})} />
+        <input {...register("desc")} />
+        <textarea {...register("img")} placeholder="Content" className={styles.textArea} cols={30} rows={10} />
         <h1>Add new Post</h1>
-        <input
-          {...register("title")} type="text"
-          placeholder="Title"
-          required
-          className={styles.input}
-        />
-        <input
-          {...register("desc")}
-          placeholder="Description"
-          required
-          className={styles.input}
-        />
-        <input
-          {...register("image")}
-          placeholder="Image"
-          required
-          className={styles.input}
-        />
-        <textarea />
 
-        <textarea placeholder="Content" className={styles.textArea} cols={30} rows={10} />
         <button className={styles.button} type='submit'>Send</button>
       </form>
     </div >;
