@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-type FormValues = {
+type IPost = {
   name: string;
   email: string;
   password: string;
@@ -15,7 +15,7 @@ type FormValues = {
 const Login = () => {
   const session = useSession()
   const router = useRouter()
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<IPost>();
 
 
   if (session.status === "loading") {
@@ -26,7 +26,7 @@ const Login = () => {
     router.push("/dashboard")
   }
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<IPost> = async (data) => {
 
     const name = data.name
     const email = data.email
@@ -42,7 +42,8 @@ const Login = () => {
           <h1 className={styles.subtitle}>Please sign in to see the dashboard.</h1>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <input
-              {...register("email")} type="text"
+              {...register("email")}
+              type="text"
               placeholder="Email"
               required
               className={styles.input}

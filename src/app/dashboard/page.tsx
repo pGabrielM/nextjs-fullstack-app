@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import styles from "./page.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -20,12 +20,12 @@ interface IPost {
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
-  const { register, handleSubmit } = useForm<IPost>()
+  const { reset, register, handleSubmit } = useForm<IPost>()
 
   const fetcher: Fetcher<IPost[], string> = (...args) =>
     fetch(...args).then((res) => res.json());
 
-  const { data, error, isLoading } = useSWR<IPost[]>(
+  const { data, error, isLoading, mutate } = useSWR<IPost[]>(
     `api/posts?username=${session.data?.user?.name}`,
     fetcher
   );
@@ -38,36 +38,81 @@ const Dashboard = () => {
     router.push("/dashboard/login");
   }
 
-  const onSubmit: SubmitHandler<IPost> = (data: IPost) => {
+  const onSubmit: SubmitHandler<IPost> = async (data: IPost) => {
 
     const title = data.title
     const desc = data.desc
-    const image = data.img
+    const img = data.img
+    const content = data.content
 
-    console.log(desc)
+    try {
+      await fetch("api/posts", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          desc,
+          img,
+          content,
+          username: session.data?.user?.name
+        })
+      })
+      mutate();
+      reset();
 
+    } catch (err) {
+      console.log(err)
+    }
 
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`api/posts/${id}`, {
+        method: "DELETE"
+      });
+      mutate();
+    } catch (error) {
+
+    }
   }
 
   if (session.status === "authenticated") {
     return <div className={styles.container}>
       <div className={styles.posts}>
-        {data?.map((post: IPost) => (
+        {isLoading ? "loading" : data?.map((post: IPost) => (
           <div className={styles.post} key={post._id}>
             <div className={styles.imgContainer}>
-              <Image src={post.img} alt="" />
+              <Image src={post.img} alt="" width={200} height={100} />
             </div>
             <h2 className={styles.postTitle}>{post.title}</h2>
-            <span className={styles.delete}>X</span>
+            <span className={styles.delete} onClick={() => handleDelete(post._id)}>X</span>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <input {...register("title", {})} />
-        <input {...register("desc")} />
-        <textarea {...register("img")} placeholder="Content" className={styles.textArea} cols={30} rows={10} />
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.new}>
         <h1>Add new Post</h1>
-
+        <input
+          {...register("title", { required: true })}
+          placeholder="Title"
+          className={styles.input}
+        />
+        <input
+          {...register("desc", { required: true })}
+          placeholder="Desc"
+          className={styles.input}
+        />
+        <input
+          {...register("img", { required: true })}
+          placeholder="Image"
+          className={styles.input}
+        />
+        <textarea
+          {...register("content", { required: true })}
+          placeholder="Content"
+          className={styles.textArea}
+          cols={30}
+          rows={10}
+        />
         <button className={styles.button} type='submit'>Send</button>
       </form>
     </div >;
