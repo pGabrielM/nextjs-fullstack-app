@@ -3,14 +3,13 @@ import styles from './page.module.css'
 import { Button } from '@/components/Button/Button'
 import Image from 'next/image'
 
-interface CategoryType {
-  params: {
-    category: string
-  }
-}
-
-export const Category = ({ params }: CategoryType) => {
-  console.log(params)
+const Category = ({
+  params,
+  searchParams,
+}: {
+  params: { category: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) => {
   return (
     <div className={styles.container}>
       <h1 className={styles.catTitle}>{params.category}</h1>

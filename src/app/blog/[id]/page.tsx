@@ -5,7 +5,7 @@ import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import { IPost } from '@/models/Post';
 import { notFound } from 'next/navigation'
 
-async function getData(id: IPost) {
+async function getData(id: string) {
   const res = await fetch(`http://localhost:3002/api/posts/${id}`, {
     cache: "no-store"
   });
@@ -17,8 +17,14 @@ async function getData(id: IPost) {
   return res.json();
 }
 
-export async function generateMetadata({params}: Params) {
-  const post: IPost = await getData(params.id)
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const post = await getData(params.id)
 
   return {
     title: post.title,
@@ -26,9 +32,15 @@ export async function generateMetadata({params}: Params) {
   }
 }
 
-const BlogPost = async ({ params }: Params) => {
+const BlogPost = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) => {
   const data: IPost = await getData(params.id);
-  
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
