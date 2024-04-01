@@ -1,1 +1,1 @@
-Projeto hospedado na Vercel https://nextjs-fullstack-app-opal.vercel.app/
+Vercel link - https://nextjs-fullstack-app-opal.vercel.app/
