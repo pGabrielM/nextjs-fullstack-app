@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 async function getData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/posts`, {
+  const res = await fetch(`/api/posts`, {
     cache: "no-store"
   });
 
@@ -24,7 +24,6 @@ async function getData() {
 
 const Blog = async () => {
   const data = await getData();
-
   return (
     <div className={styles.mainContainer}>
       {data.map((item: IPost) => (
