@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-type IPost = {
+type LoginInput = {
   name: string;
   email: string;
   password: string;
@@ -15,7 +15,8 @@ type IPost = {
 const Login = () => {
   const session = useSession()
   const router = useRouter()
-  const { register, handleSubmit } = useForm<IPost>();
+  const { register, handleSubmit } = useForm<LoginInput>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
 
   if (session.status === "loading") {
@@ -26,13 +27,17 @@ const Login = () => {
     router.push("/dashboard")
   }
 
-  const onSubmit: SubmitHandler<IPost> = async (data) => {
+  const onSubmit: SubmitHandler<LoginInput> = async (data) => {
 
-    const name = data.name
-    const email = data.email
-    const password = data.password
+    const result = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false
+    })
 
-    signIn("credentials", { email, password })
+    if (result?.error) {
+      setErrorMessage(result?.error)
+    }
   }
 
   return (
@@ -55,6 +60,7 @@ const Login = () => {
               required
               className={styles.input}
             />
+            <h4 className={styles.errorMessage}>{errorMessage}</h4>
             <button className={styles.button} type='submit'>Login</button>
           </form>
           <p>OR</p>
