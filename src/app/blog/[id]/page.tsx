@@ -5,7 +5,7 @@ import { IPost } from '@/models/Post';
 import { notFound } from 'next/navigation'
 
 async function getData(id: string) {
-  const res = await fetch(`http://localhost:3002/api/posts/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/posts/${id}`, {
     cache: "no-store"
   });
 

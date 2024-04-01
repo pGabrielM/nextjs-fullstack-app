@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 async function getData() {
-  const res = await fetch("http://localhost:3002/api/posts", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}}/api/posts`, {
     cache: "no-store"
   });
 
