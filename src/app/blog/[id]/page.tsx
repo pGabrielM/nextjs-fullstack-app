@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from "./page.module.css";
 import Image from 'next/image';
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import { IPost } from '@/models/Post';
 import { notFound } from 'next/navigation'
 
