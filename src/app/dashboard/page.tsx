@@ -20,7 +20,7 @@ interface IPost {
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
-  const { reset, register, handleSubmit } = useForm<IPost>()
+  const { reset, register, handleSubmit, formState: { errors } } = useForm<IPost>()
 
   const fetcher: Fetcher<IPost[], string> = (...args) =>
     fetch(...args).then((res) => res.json());
@@ -92,27 +92,39 @@ const Dashboard = () => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.new}>
         <h1>Add new Post</h1>
         <input
-          {...register("title", { required: true })}
+          {...register("title", {
+            required: { value: true, message: 'Title is required' }
+          })}
           placeholder="Title"
           className={styles.input}
         />
+        {errors.title && <span className={styles.validationMessage}>{errors.title.message}</span>}
         <input
-          {...register("desc", { required: true })}
+          {...register("desc", { required: { value: true, message: 'Description is required' } })}
           placeholder="Desc"
           className={styles.input}
         />
+        {errors.desc && <span className={styles.validationMessage}>{errors.desc.message}</span>}
         <input
-          {...register("img", { required: true })}
+          {...register("img", {
+            required: { value: true, message: 'Url is required' },
+            pattern: {
+              value: /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
+              message: 'Please enter a valid url'
+            }
+          })}
           placeholder="Image"
           className={styles.input}
         />
+        {errors.img && <span className={styles.validationMessage}>{errors.img.message}</span>}
         <textarea
-          {...register("content", { required: true })}
+          {...register("content", { required: { value: true, message: 'Content is required' } })}
           placeholder="Content"
           className={styles.textArea}
           cols={30}
           rows={10}
         />
+        {errors.content && <span className={styles.validationMessage}>{errors.content.message}</span>}
         <button className={styles.button} type='submit'>Send</button>
       </form>
     </div >;

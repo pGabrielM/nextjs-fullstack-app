@@ -24,6 +24,12 @@
   object-fit: cover;
 }
 
+.validationMessage {
+  color: red;
+  font-weight: 500;
+  font-size: small;
+}
+
 .delete {
   cursor: pointer;
   color: red;

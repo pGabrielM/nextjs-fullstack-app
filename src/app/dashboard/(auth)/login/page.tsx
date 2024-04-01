@@ -64,10 +64,10 @@ const Login = () => {
             <button className={styles.button} type='submit'>Login</button>
           </form>
           <p>OR</p>
-          <button onClick={() => signIn("google")}>Login with Google</button>
+          <button className={styles.loginWithGoogleBtn} onClick={() => signIn("google")}>Login with Google</button>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
