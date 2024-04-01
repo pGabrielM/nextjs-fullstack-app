@@ -39,7 +39,6 @@ const Dashboard = () => {
   }
 
   const onSubmit: SubmitHandler<IPost> = async (data: IPost) => {
-
     const title = data.title
     const desc = data.desc
     const img = data.img
@@ -62,7 +61,6 @@ const Dashboard = () => {
     } catch (err) {
       console.log(err)
     }
-
   }
 
   const handleDelete = async (id: string) => {
@@ -72,7 +70,6 @@ const Dashboard = () => {
       });
       mutate();
     } catch (error) {
-
     }
   }
 

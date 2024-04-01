@@ -30,6 +30,13 @@
   text-align: center;
 }
 
+.accountCreatedMessage {
+  color: #49c48d;
+  font-weight: 600;
+  font-size: larger;
+  text-align: center;
+}
+
 .loginWithGoogleBtn {
   transition: background-color 0.3s, box-shadow 0.3s;
 

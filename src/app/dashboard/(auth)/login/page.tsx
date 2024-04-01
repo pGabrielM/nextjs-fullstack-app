@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import Link from 'next/link';
 
 type LoginInput = {
   name: string;
@@ -12,7 +13,7 @@ type LoginInput = {
   password: string;
 };
 
-const Login = () => {
+const Login = ({ searchParams }: any) => {
   const session = useSession()
   const router = useRouter()
   const { register, handleSubmit } = useForm<LoginInput>();
@@ -44,11 +45,12 @@ const Login = () => {
     <div>
       <div>
         <div className={styles.container}>
+          <span className={styles.accountCreatedMessage}>{searchParams.success}</span>
           <h1 className={styles.subtitle}>Please sign in to see the dashboard.</h1>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <input
               {...register("email")}
-              type="text"
+              type="email"
               placeholder="Email"
               required
               className={styles.input}
@@ -65,6 +67,10 @@ const Login = () => {
           </form>
           <p>OR</p>
           <button className={styles.loginWithGoogleBtn} onClick={() => signIn("google")}>Login with Google</button>
+          <p>OR</p>
+          <Link className={styles.link} href="/dashboard/register">
+            Create new account
+          </Link>
         </div>
       </div>
     </div >

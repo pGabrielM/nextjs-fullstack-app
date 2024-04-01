@@ -16,29 +16,27 @@ const Register = () => {
   const [error, setError] = useState(false);
   const router = useRouter()
 
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-
     const name = data.name
     const email = data.email
     const password = data.password
 
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password
-        })
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password
       })
+    })
 
-      res.status === 201 && router.push("/dashboard/login?success=Account has been created")
+    res.status === 201 && router.push("/dashboard/login?success=Account has been created")
 
-    } catch {
+    if (!res.ok) {
       setError(true)
     }
   }
@@ -50,27 +48,34 @@ const Register = () => {
         <h2 className={styles.subtitle}>Please sign up to see the dashboard.</h2>
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <input
-            {...register("name")}
+            {...register("name", {
+              required: { value: true, message: 'Name is required' }
+            })}
             type="text"
-            placeholder="name"
-            required
+            placeholder="Name"
             className={styles.input}
           />
+          {errors.name && <span className={styles.validationMessage}>{errors.name.message}</span>}
           <input
-            {...register("email")} type="text"
+            {...register("email", {
+              required: { value: true, message: 'Email is required' }
+            })}
+            type="email"
             placeholder="Email"
-            required
             className={styles.input}
           />
+          {errors.email && <span className={styles.validationMessage}>{errors.email.message}</span>}
           <input
-            {...register("password")}
+            {...register("password", {
+              required: { value: true, message: 'Password is required' }
+            })}
             type="password"
             placeholder="Password"
-            required
             className={styles.input}
           />
+          {errors.password && <span className={styles.validationMessage}>{errors.password.message}</span>}
           <button className={styles.button} type='submit'>Register</button>
-          {error && "Something went wrong!"}
+          {error && <span className={styles.validationMessage}>Something went wrong!</span>}
         </form>
         <span className={styles.or}>- OR -</span>
         <Link className={styles.link} href="/dashboard/login">
